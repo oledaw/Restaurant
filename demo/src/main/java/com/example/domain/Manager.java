@@ -12,6 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Manager extends User {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     @JsonCreator
     public Manager( @JsonProperty("username") String username, @JsonProperty("password") String password, @JsonProperty("firstname") String firstname, 
                     @JsonProperty("lastname") String lastname, @JsonProperty("email") String email) {

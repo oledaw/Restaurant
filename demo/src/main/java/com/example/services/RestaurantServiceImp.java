@@ -6,8 +6,6 @@ import java.util.logging.Logger;
 import com.example.domain.Restaurant;
 import com.example.domain.User;
 import com.example.repos.RestaurantRepository;
-
-
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,6 +42,11 @@ public class RestaurantServiceImp implements RestaurantService {
         LOGGER.info("Manager: " + manager.getUsername() + " was appended to " + restaurant.getName());
 		restaurant.getUsers().add(manager);
 		save(restaurant);
+    }
+
+    @Override
+    public <T> List<T> findAllRestaurantsLite(Class<T> type) {
+        return restaurantRepository.findBy(type);
     }
     
 }

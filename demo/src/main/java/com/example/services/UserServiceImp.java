@@ -6,8 +6,8 @@ import java.util.logging.Logger;
 
 import javax.transaction.Transactional;
 
-import com.example.domain.Role;
 import com.example.domain.User;
+import com.example.dto.UserLite;
 import com.example.repos.RoleRepository;
 import com.example.repos.UserRepository;
 
@@ -52,6 +52,24 @@ public class UserServiceImp implements UserService {
     public Optional<User> findById(Long userId) {
         // TODO Auto-generated method stub
         return userRepository.findById(userId);
+    }
+
+    @Override
+    public List<UserLite> findCustom() {
+        return userRepository.findByOrderById();
+         
+    }
+
+    @Override
+    public <T> List<T> findBy(Class<T> type) {
+        
+        return userRepository.findBy(type);
+    }
+
+    @Override
+    public <T> T genericMethod(Long userId, Class<T> type) {
+        return userRepository.findByIdOrderById(userId, type);
+        
     }
     
 }

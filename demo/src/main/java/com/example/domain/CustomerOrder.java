@@ -1,10 +1,9 @@
 package com.example.domain;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.annotation.Generated;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,9 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,18 +28,15 @@ public class CustomerOrder implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-        @JoinTable(
-                name = "corder_product",
-                joinColumns = @JoinColumn(
-                        name = "corder_id", referencedColumnName = "id"),
-                inverseJoinColumns = @JoinColumn(
-                        name = "product_id", referencedColumnName = "id"))
     @Getter
     @Setter
-    private List<Product> products = new ArrayList<>();
+    private long id;
+
+    @Getter
+    @Setter
+    @OneToMany(mappedBy = "customerOrder",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    Set<OrderProduct> orderProducts = new HashSet<>();
+
     @Getter
     @Setter
     private float total = 0;
@@ -69,10 +64,16 @@ public class CustomerOrder implements Serializable{
     public CustomerOrder(User user, RestaurantTable table) {
         this.user = user;
         this.restaurantTable_id = table.getId();
+        this.restaurant = table.getRestaurant();
     }
 
-    public void addToTotal(float price){
-        this.total+=price;
+    public void addToTotal(){
+        this.total+=getOrderProducts().iterator().next().getProduct().getPrice()*getOrderProducts().iterator().next().getQuantity();
+    }
+
+    public void checked(){
+        setStatus("CHECKED");
+        
     }
 
 

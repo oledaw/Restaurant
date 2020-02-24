@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -23,20 +22,20 @@ import com.example.validator.Username;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @GeneratedValue(strategy = GenerationType.TABLE)
     @Id
+    @Getter
+    @Setter
     private long id;
     @Getter
     @Setter
@@ -67,7 +66,7 @@ public class User implements Serializable {
     @Getter
     @Setter
     private Set<Role> roles = new HashSet<>();
-
+    
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Getter
     @Setter
@@ -83,7 +82,4 @@ public class User implements Serializable {
         this.email = email;
         getRoles().add(new Role(Type.USER));
     }
-
-
-
 }

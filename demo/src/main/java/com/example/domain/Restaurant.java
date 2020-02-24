@@ -17,7 +17,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.example.domain.Role.Type;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -69,12 +68,12 @@ public class Restaurant implements Serializable {
     @Setter
     Set<RestaurantTable> restaurantTables;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Getter
-    @Setter
-    Set<CustomerOrder> orders;
+//     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//     @Getter
+//     @Setter
+//     Set<CustomerOrder> orders;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
         @JoinTable(
                 name = "restaurant_product",
                 joinColumns = @JoinColumn(

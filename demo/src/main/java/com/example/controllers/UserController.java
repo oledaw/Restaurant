@@ -6,15 +6,17 @@ import javax.validation.Valid;
 
 import com.example.domain.Manager;
 import com.example.domain.User;
+import com.example.dto.UserLite;
 import com.example.services.UserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping(UserController.BASE_URL)
@@ -28,9 +30,9 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    List<User> getAllUsers() {
-        return userService.findAll();
+    @GetMapping(value = "/users")
+    List<UserLite> getAllUsersCustom() throws JsonProcessingException {
+        return userService.findBy(UserLite.class);
     }
 
     @PostMapping(value = "/user/register")

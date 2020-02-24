@@ -50,11 +50,15 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/api/v1/customers").permitAll()
+                .antMatchers("/api/v1/user").hasRole("USER")
+                .antMatchers("/api/v1/generic").hasRole("USER")
                 .and().httpBasic()
                 .and()
                 // .authenticationEntryPoint(authenticationEntryPoint)
                 // .and()
-                .headers().frameOptions().disable();
+                .headers().frameOptions().disable()
+                .and()
+                .logout();
     }
     
 }

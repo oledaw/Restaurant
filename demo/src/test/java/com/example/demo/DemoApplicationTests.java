@@ -3,7 +3,6 @@ package com.example.demo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -12,11 +11,12 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import com.example.domain.CustomerOrder;
 import com.example.domain.Manager;
+import com.example.domain.OrderProduct;
 import com.example.domain.Product;
 import com.example.domain.Restaurant;
 import com.example.domain.RestaurantTable;
-import com.example.domain.CustomerOrder;
 import com.example.domain.User;
 import com.example.dto.RestaurantManager;
 import com.example.dto.RestaurantTableDto;
@@ -32,9 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.repository.CrudRepository;
 
 @SpringBootTest
 class DemoApplicationTests {
@@ -61,14 +59,15 @@ class DemoApplicationTests {
 	@Test
 	void createNewUser() throws JsonMappingException, JsonProcessingException {
 		//given
-		String JSON_INPUT = "{\"username\" : \"user\", \"password\" : \"user\", \"firstname\" : \"user\", \"lastname\" : \"user\", \"email\" : \"user@test.pl\"}";
+		String JSON_INPUT = "{\"username\" : \"user\", \"password\" : \"user\",\"firstname\" : \"user\", \"lastname\" : \"user\", \"email\" : \"user@test.pl\"}";
 		User newUser = new ObjectMapper().readValue(JSON_INPUT, User.class);
 
 		//when
 		userService.save(newUser);
 
 		//then
-		assertEquals(userService.findByUsername(newUser.getUsername()).getUsername(), newUser.getUsername());
+		assertEquals(userService.findByUsername(newUser.getUsername()).getUsername(), 
+			newUser.getUsername());
 	}
 
 
@@ -171,17 +170,25 @@ class DemoApplicationTests {
 		Optional<User> currnetUserOptional = userService.findById(restaurantTableDto.getUserId());
 		User currnetUser = currnetUserOptional.get(); 
 
+		String JSON_INPUT1 = "{\"restaurantEmail\" : \"restaurant@test.pl\", \"managerEmail\" : \"manager@test.pl\"}";
+		RestaurantManager restaurantManager = new ObjectMapper().readValue(JSON_INPUT1, RestaurantManager.class);
+		Restaurant restaurant = restaurantService.findByEmail(restaurantManager.getRestaurantEmail());
+		restaurant.getProducts().add(new Product(122, "Kon"));
+		restaurant.getProducts().add(new Product(112322, "Cos tam"));
+		restaurantService.save(restaurant);
+
+
+
+
 		//when
-		CustomerOrder order = new CustomerOrder(currnetUser, restaurantTable);
-		order.setRestaurant(restaurantTable.getRestaurant());
-		order.setUser(currnetUser);
-		order.setRestaurantTable_id(restaurantTable.getId());
-		order.getProducts().add(new Product(10, "Maslo"));
-		order.getProducts().add(new Product(15, "Kon"));
-		order.getProducts().forEach((product)->{
-			order.addToTotal(product.getPrice());
-		});
-		customerOrderRepository.save(order);
+		CustomerOrder customerOrder = new CustomerOrder(currnetUser, restaurantTable);
+		OrderProduct orderProduct = new OrderProduct(new Product(10, "Kaczka"), customerOrder, 2);
+		customerOrder.getOrderProducts().add(orderProduct);
+
+		customerOrderRepository.save(customerOrder);
+
+
+		
 		currnetUserOptional = userService.findById(restaurantTableDto.getUserId());
 		currnetUser = currnetUserOptional.get(); 
 		
@@ -199,7 +206,7 @@ class DemoApplicationTests {
 
 		//when
 		Restaurant restaurant = restaurantService.findByEmail(restaurantManager.getRestaurantEmail());
-		restaurant.getProducts().add(new Product(122, "Maslo"));
+		restaurant.getProducts().add(new Product(122, "Kon"));
 		restaurant.getProducts().add(new Product(112322, "Cos tam"));
 		restaurantService.save(restaurant);
 

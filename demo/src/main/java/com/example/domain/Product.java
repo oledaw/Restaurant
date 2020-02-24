@@ -6,7 +6,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,6 +30,9 @@ public class Product implements Serializable{
     @Getter
     @Setter
     private String name;
+
+    @OneToMany(mappedBy = "product")
+    List<OrderProduct> products;
 
 
     public Product(float price, String name) {

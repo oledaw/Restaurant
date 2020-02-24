@@ -1,7 +1,5 @@
 package com.example.dto;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

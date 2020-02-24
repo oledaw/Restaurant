@@ -13,6 +13,8 @@ public interface RestaurantService {
 
 	List<Restaurant> findAll();
 
+	<T> List <T> findAllRestaurantsLite(Class <T> type);
+
 	void addManager (Restaurant restaurant, User manager);
 
 }
